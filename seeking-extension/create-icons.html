@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Extension Icons</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #667eea;
+        }
+        .icon-display {
+            display: flex;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        .icon-item {
+            text-align: center;
+        }
+        canvas {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            display: block;
+            margin: 10px 0;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .instructions {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        .instructions h2 {
+            color: #374151;
+            font-size: 18px;
+        }
+        .instructions ol {
+            color: #6b7280;
+            line-height: 1.8;
+        }
+        .instructions code {
+            background: #e5e7eb;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Extension Icon Generator</h1>
+        <p>This page generates the required icon files for your Seeking Extension.</p>
+        
+        <div class="icon-display">
+            <div class="icon-item">
+                <h3>16x16 (Toolbar)</h3>
+                <canvas id="canvas16" width="16" height="16"></canvas>
+                <button onclick="downloadIcon(16)">Download icon16.png</button>
+            </div>
+            
+            <div class="icon-item">
+                <h3>48x48 (Extensions Page)</h3>
+                <canvas id="canvas48" width="48" height="48"></canvas>
+                <button onclick="downloadIcon(48)">Download icon48.png</button>
+            </div>
+            
+            <div class="icon-item">
+                <h3>128x128 (Web Store)</h3>
+                <canvas id="canvas128" width="128" height="128"></canvas>
+                <button onclick="downloadIcon(128)">Download icon128.png</button>
+            </div>
+        </div>
+        
+        <button onclick="downloadAll()" style="width: 200px; height: 40px; font-size: 16px;">
+            📦 Download All Icons
+        </button>
+        
+        <div class="instructions">
+            <h2>📋 Instructions:</h2>
+            <ol>
+                <li>Click the "Download All Icons" button above</li>
+                <li>Save each file to your <code>seeking-extension</code> folder</li>
+                <li>Make sure the files are named exactly: <code>icon16.png</code>, <code>icon48.png</code>, <code>icon128.png</code></li>
+                <li>Reload the extension in Chrome after adding the icons</li>
+                <li>The extension icon should now appear in your toolbar</li>
+            </ol>
+            
+            <h2>🎨 Customization (Optional):</h2>
+            <p>If you want to create custom icons:</p>
+            <ol>
+                <li>Use any image editor (Photoshop, GIMP, Canva, etc.)</li>
+                <li>Create square images in the required sizes</li>
+                <li>Save as PNG with transparency</li>
+                <li>Replace the generated icons with your custom ones</li>
+            </ol>
+        </div>
+    </div>
+    
+    <script>
+        // Function to draw icon on canvas
+        function drawIcon(size) {
+            const canvas = document.getElementById(`canvas${size}`);
+            const ctx = canvas.getContext('2d');
+            
+            // Create gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            
+            // Draw rounded rectangle background
+            const radius = size / 8;
+            ctx.beginPath();
+            ctx.moveTo(radius, 0);
+            ctx.lineTo(size - radius, 0);
+            ctx.quadraticCurveTo(size, 0, size, radius);
+            ctx.lineTo(size, size - radius);
+            ctx.quadraticCurveTo(size, size, size - radius, size);
+            ctx.lineTo(radius, size);
+            ctx.quadraticCurveTo(0, size, 0, size - radius);
+            ctx.lineTo(0, radius);
+            ctx.quadraticCurveTo(0, 0, radius, 0);
+            ctx.closePath();
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            
+            // Draw "S" letter
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${size * 0.5}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('S', size / 2, size / 2 + size * 0.02);
+            
+            // Add subtle inner shadow for depth
+            ctx.globalCompositeOperation = 'multiply';
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, size * 0.9, size, size * 0.1);
+            ctx.globalCompositeOperation = 'source-over';
+        }
+        
+        // Function to download icon
+        function downloadIcon(size) {
+            const canvas = document.getElementById(`canvas${size}`);
+            const link = document.createElement('a');
+            link.download = `icon${size}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        // Function to download all icons
+        function downloadAll() {
+            [16, 48, 128].forEach(size => {
+                setTimeout(() => downloadIcon(size), size * 10);
+            });
+        }
+        
+        // Draw all icons on page load
+        window.onload = function() {
+            [16, 48, 128].forEach(size => drawIcon(size));
+        };
+    </script>
+</body>
+</html>
