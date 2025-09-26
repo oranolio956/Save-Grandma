@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generate Extension Icons</title>
+</head>
+<body>
+  <h2>Icon Generator</h2>
+  <p>Right-click each canvas and save as PNG with the corresponding filename:</p>
+  
+  <div>
+    <h3>icon-16.png</h3>
+    <canvas id="icon16" width="16" height="16"></canvas>
+  </div>
+  
+  <div>
+    <h3>icon-32.png</h3>
+    <canvas id="icon32" width="32" height="32"></canvas>
+  </div>
+  
+  <div>
+    <h3>icon-48.png</h3>
+    <canvas id="icon48" width="48" height="48"></canvas>
+  </div>
+  
+  <div>
+    <h3>icon-128.png</h3>
+    <canvas id="icon128" width="128" height="128"></canvas>
+  </div>
+  
+  <script>
+    function drawIcon(canvasId, size) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext('2d');
+      
+      // Create gradient background
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#667eea');
+      gradient.addColorStop(1, '#764ba2');
+      
+      // Draw rounded rectangle background
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.roundRect(0, 0, size, size, size * 0.2);
+      ctx.fill();
+      
+      // Draw chat bubble icon
+      ctx.fillStyle = 'white';
+      const bubbleSize = size * 0.6;
+      const bubbleX = (size - bubbleSize) / 2;
+      const bubbleY = (size - bubbleSize) / 2;
+      
+      ctx.beginPath();
+      ctx.roundRect(bubbleX, bubbleY, bubbleSize, bubbleSize * 0.7, bubbleSize * 0.15);
+      ctx.fill();
+      
+      // Draw chat bubble tail
+      ctx.beginPath();
+      ctx.moveTo(bubbleX + bubbleSize * 0.2, bubbleY + bubbleSize * 0.7);
+      ctx.lineTo(bubbleX + bubbleSize * 0.1, bubbleY + bubbleSize * 0.9);
+      ctx.lineTo(bubbleX + bubbleSize * 0.35, bubbleY + bubbleSize * 0.7);
+      ctx.fill();
+      
+      // Draw dots in chat bubble
+      ctx.fillStyle = gradient;
+      const dotSize = size * 0.06;
+      const dotY = bubbleY + bubbleSize * 0.35;
+      
+      for (let i = 0; i < 3; i++) {
+        const dotX = bubbleX + bubbleSize * 0.25 + (i * bubbleSize * 0.25);
+        ctx.beginPath();
+        ctx.arc(dotX, dotY, dotSize, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      
+      // Convert to PNG and create download link
+      canvas.style.border = '1px solid #ccc';
+      canvas.style.margin = '10px';
+      canvas.style.imageRendering = 'pixelated';
+      canvas.style.width = size * 2 + 'px';
+      canvas.style.height = size * 2 + 'px';
+    }
+    
+    // Generate all icon sizes
+    drawIcon('icon16', 16);
+    drawIcon('icon32', 32);
+    drawIcon('icon48', 48);
+    drawIcon('icon128', 128);
+  </script>
+</body>
+</html>
