@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seeking Auto Detector</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      width: 350px;
+      min-height: 400px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+    }
+    
+    .container {
+      background: white;
+      border-radius: 12px;
+      margin: 10px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    
+    .header h1 {
+      font-size: 1.25rem;
+      color: #667eea;
+      margin-bottom: 5px;
+    }
+    
+    .header p {
+      font-size: 0.75rem;
+      color: #666;
+    }
+    
+    .status-section {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    
+    .status-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .status-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .status-label {
+      font-size: 0.875rem;
+      color: #555;
+      font-weight: 500;
+    }
+    
+    .status-value {
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 0.25rem 0.625rem;
+      border-radius: 12px;
+      background: white;
+    }
+    
+    .status-value.active {
+      color: #10b981;
+      background: #d1fae5;
+    }
+    
+    .status-value.inactive {
+      color: #ef4444;
+      background: #fee2e2;
+    }
+    
+    .status-value.logged-in {
+      color: #3b82f6;
+      background: #dbeafe;
+    }
+    
+    .status-value.not-logged-in {
+      color: #f59e0b;
+      background: #fef3c7;
+    }
+    
+    .controls {
+      margin-top: 20px;
+    }
+    
+    .toggle-switch {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    
+    .toggle-switch label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #333;
+    }
+    
+    .switch {
+      position: relative;
+      width: 50px;
+      height: 26px;
+    }
+    
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 26px;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .slider {
+      background-color: #667eea;
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(24px);
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    
+    button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-height: 44px; /* Minimum touch target size */
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
+    
+    .btn-secondary:hover {
+      background: #d1d5db;
+    }
+    
+    .warning {
+      background: #fef3c7;
+      border: 1px solid #fbbf24;
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 15px;
+      font-size: 0.75rem;
+      color: #92400e;
+      line-height: 1.5;
+    }
+    
+    .warning strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #78350f;
+    }
+    
+    .activity-log {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #e5e7eb;
+    }
+    
+    .activity-log h3 {
+      font-size: 0.875rem;
+      margin-bottom: 10px;
+      color: #374151;
+    }
+    
+    .activity-item {
+      font-size: 0.75rem;
+      color: #6b7280;
+      padding: 5px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+    
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid #f3f3f3;
+      border-top: 2px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-left: 5px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    /* Mobile-specific optimizations */
+    @media screen and (max-width: 400px) {
+      body {
+        width: 100vw;
+        max-width: 320px;
+      }
+      
+      .container {
+        margin: 5px;
+        padding: 15px;
+      }
+      
+      .header h1 {
+        font-size: 1.125rem;
+      }
+      
+      .header p {
+        font-size: 0.75rem;
+      }
+      
+      .status-section {
+        padding: 12px;
+      }
+      
+      .toggle-switch {
+        padding: 12px;
+      }
+      
+      .button-group {
+        gap: 8px;
+        margin-top: 12px;
+      }
+      
+      button {
+        padding: 12px;
+      }
+      
+      .warning {
+        padding: 10px;
+        font-size: 0.7rem;
+      }
+      
+      .activity-log {
+        margin-top: 12px;
+        padding-top: 12px;
+      }
+    }
+  </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔍 Seeking Auto Detector</h1>
+      <p>Automate your Seeking.com experience</p>
+    </div>
+    
+    <div class="status-section">
+      <div class="status-item">
+        <span class="status-label">Extension Status:</span>
+        <span id="extensionStatus" class="status-value inactive">Loading...</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">Login Status:</span>
+        <span id="loginStatus" class="status-value not-logged-in">Checking...</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">Auto-Simulation:</span>
+        <span id="simulationStatus" class="status-value inactive">Not Run</span>
+      </div>
+    </div>
+    
+    <div class="controls">
+      <div class="toggle-switch">
+        <label for="enableToggle">Enable Extension</label>
+        <label class="switch">
+          <input type="checkbox" id="enableToggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+      
+      <div class="toggle-switch">
+        <label for="autoSimToggle">Auto-Simulate Enter</label>
+        <label class="switch">
+          <input type="checkbox" id="autoSimToggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+      
+      <div class="toggle-switch">
+        <label for="debugToggle">Debug Mode</label>
+        <label class="switch">
+          <input type="checkbox" id="debugToggle">
+          <span class="slider"></span>
+        </label>
+      </div>
+      
+      <div class="button-group">
+        <button id="simulateBtn" class="btn-primary">Simulate Now</button>
+        <button id="refreshBtn" class="btn-secondary">Refresh Status</button>
+      </div>
+      
+      <div class="button-group">
+        <button id="clearBtn" class="btn-secondary">Clear Activity</button>
+      </div>
+    </div>
+    
+    <div class="activity-log">
+      <h3>Recent Activity</h3>
+      <div id="activityList">
+        <div class="activity-item">No activity yet</div>
+      </div>
+    </div>
+    
+    <div class="warning">
+      <strong>⚠️ Important Notice:</strong>
+      This extension is for personal use only. Always comply with Seeking.com's terms of service. Excessive automation may result in account restrictions. Use responsibly and ethically.
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
