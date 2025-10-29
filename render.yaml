@@ -1,17 +1,35 @@
 services:
-- type: worker
+- type: web
   name: Moon-Userbot
-  runtime: docker
+  runtime: python3
   repo: https://github.com/The-MoonTg-project/Moon-Userbot
   plan: starter
+  buildCommand: pip install -r requirements.txt
+  startCommand: python app.py
   envVars:
-  - key: STABILITY_KEY
+  - key: API_ID
     sync: false
-  - key: CLARIFAI_PAT
+  - key: API_HASH
     sync: false
-  - key: .env
+  - key: STRINGSESSION
+    sync: false
+  - key: DATABASE_TYPE
+    value: sqlite3
+  - key: DATABASE_NAME
+    value: db.sqlite3
+  - key: PM_LIMIT
+    value: 3
+  - key: APIFLASH_KEY
+    sync: false
+  - key: RMBG_KEY
+    sync: false
+  - key: VT_KEY
+    sync: false
+  - key: GEMINI_KEY
+    sync: false
+  - key: COHERE_KEY
+    sync: false
+  - key: SECOND_SESSION
     sync: false
   region: oregon
-  dockerContext: .
-  dockerfilePath: ./Dockerfile
 version: "1"
