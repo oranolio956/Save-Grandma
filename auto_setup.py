@@ -68,25 +68,22 @@ SECOND_SESSION=
     
     # Generate session
     print("🔑 Generating session...")
-    success, stdout, stderr = run_command("python3 string_gen.py", check=False)
+    print("📱 This requires interactive input. Please run manually:")
+    print("   python3 string_gen.py")
+    print("   (Follow the prompts to login with your phone number)")
+    print("")
     
-    if success:
-        print("✅ Session generated!")
-    else:
-        print("⚠️  Session generation failed, but continuing...")
-    
-    print("\n🎉 Setup Complete!")
+    print("🎉 Setup Complete!")
     print("=" * 40)
     print("📋 Next steps:")
-    print("1. Get your API credentials: https://my.telegram.org/")
-    print("2. Edit .env file with your real API_ID and API_HASH")
-    print("3. Start the bot: python3 main.py")
-    print("\n🚀 Starting bot now...")
-    print("(Press Ctrl+C to stop)")
+    print("1. Generate session: python3 string_gen.py")
+    print("2. Get your API credentials: https://my.telegram.org/")
+    print("3. Edit .env file with your real API_ID and API_HASH")
+    print("4. Start the bot: python3 main.py")
+    print("")
+    print("🚀 Quick start after session generation:")
+    print("   python3 main.py")
     print("=" * 40)
-    
-    # Start the bot
-    os.system("python3 main.py")
 
 if __name__ == "__main__":
     main()
