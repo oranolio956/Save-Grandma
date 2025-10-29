@@ -22,3 +22,4 @@ musicbot/
 .env
 .trunk/
 previous_profiles/
+.vercel
