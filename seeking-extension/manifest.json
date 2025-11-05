@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Seeking Auto Detector",
+  "version": "1.0",
+  "description": "Automatically detects login on Seeking.com and simulates Enter key for personal efficiency. Use responsibly to comply with site terms.",
+  "permissions": ["scripting", "activeTab", "storage"],
+  "host_permissions": ["https://*.seeking.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://*.seeking.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Toggle Seeking Extension",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}
