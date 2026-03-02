@@ -1,0 +1,32 @@
+{
+  "name": "seeking-auto-detector",
+  "version": "1.0.0",
+  "description": "Chrome extension that automatically detects login on Seeking.com and simulates Enter key for personal efficiency",
+  "main": "content.js",
+  "scripts": {
+    "test": "echo \"No tests configured\"",
+    "zip": "zip -r seeking-extension.zip . -x '*.git*' -x 'node_modules/*' -x '*.zip' -x 'package*.json' -x 'create-icons.html' -x 'generate-icons.js'",
+    "reload": "echo 'Please reload the extension manually in chrome://extensions/'",
+    "validate": "echo 'Validating manifest...' && node -e \"console.log('Manifest valid:', require('./manifest.json').manifest_version === 3)\""
+  },
+  "keywords": [
+    "chrome-extension",
+    "manifest-v3",
+    "automation",
+    "seeking"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "chrome": ">=88"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/seeking-extension.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/seeking-extension/issues"
+  }
+}

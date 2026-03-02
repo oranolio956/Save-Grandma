@@ -1,0 +1,119 @@
+{
+  "manifest_version": 3,
+  "name": "Seeking Auto Detector Pro",
+  "version": "2.0.0",
+  "description": "Advanced automation for Seeking.com with AI-powered detection and human-like interaction simulation",
+  
+  "permissions": [
+    "scripting",
+    "activeTab",
+    "storage",
+    "contextMenus",
+    "notifications",
+    "idle",
+    "alarms"
+  ],
+  
+  "host_permissions": [
+    "https://*.seeking.com/*",
+    "https://*.seekingarrangement.com/*"
+  ],
+  
+  "optional_permissions": [
+    "debugger",
+    "webNavigation",
+    "tabs"
+  ],
+  
+  "content_scripts": [
+    {
+      "matches": ["https://*.seeking.com/*"],
+      "js": [
+        "lib/tensorflow.min.js",
+        "lib/security/encryption.js",
+        "lib/performance/cache.js",
+        "utils/helpers.js",
+        "src/content/detector.js",
+        "src/content/simulator.js",
+        "src/content/main.js"
+      ],
+      "css": ["src/content/overlay.css"],
+      "run_at": "document_end",
+      "all_frames": false,
+      "match_about_blank": false
+    }
+  ],
+  
+  "background": {
+    "service_worker": "src/background/service-worker.js",
+    "type": "module"
+  },
+  
+  "action": {
+    "default_popup": "src/popup/index.html",
+    "default_title": "Seeking Auto Detector Pro",
+    "default_icon": {
+      "16": "assets/icons/icon16.png",
+      "32": "assets/icons/icon32.png",
+      "48": "assets/icons/icon48.png",
+      "128": "assets/icons/icon128.png"
+    }
+  },
+  
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "32": "assets/icons/icon32.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png",
+    "256": "assets/icons/icon256.png"
+  },
+  
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'none'; style-src 'self' 'unsafe-inline';",
+    "sandbox": "sandbox allow-scripts allow-forms allow-popups allow-modals; script-src 'self' 'unsafe-inline' 'unsafe-eval'; child-src 'self';"
+  },
+  
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "lib/*",
+        "assets/*",
+        "src/inject/*"
+      ],
+      "matches": ["https://*.seeking.com/*"]
+    }
+  ],
+  
+  "externally_connectable": {
+    "matches": ["https://*.seeking.com/*"]
+  },
+  
+  "commands": {
+    "toggle-extension": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S",
+        "mac": "Command+Shift+S"
+      },
+      "description": "Toggle extension on/off"
+    },
+    "simulate-enter": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+E",
+        "mac": "Command+Shift+E"
+      },
+      "description": "Manually trigger Enter simulation"
+    }
+  },
+  
+  "minimum_chrome_version": "88",
+  
+  "update_url": "https://clients2.google.com/service/update2/crx",
+  
+  "offline_enabled": true,
+  
+  "incognito": "split",
+  
+  "author": "Ruben Hassid",
+  
+  "homepage_url": "https://github.com/yourusername/seeking-extension"
+}
